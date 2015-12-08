@@ -7,6 +7,7 @@ The biggest advantage when using SimpleSelenium, is creating a test with no need
 This happens after the DOM was dynamically changed and the the test can not use the Objects referenced by the class members to contact the relevant nodes in the current DOM. The methods in §8b- §8d makes sure the test will not fail even though there are no expected condition at all.  
 
 
+
 1) Selement - should be used instead of WebElement
 
 Class members of a page class, which refer to GUI-Elements on the screen, should be of Interface type Selement instead of WebElement. The Selenium 'WebElement' is considered deprecated when using SimpleSelenium.
@@ -34,7 +35,6 @@ Some of the important methods of class LoadablePage will be introduced in §8.
 
 
 
-
 3) SubPage, SubPageImpl - a class member which represent a section of the page
 
 A Limited section on the screen may be represented by a separate class. This class should extend SubPageImpl instead of LoadablePage (SubPage is an interface). The Constructor of this class will receive a Selement as parameter. This Selement represent a GUI-Element, which contains this section on the screen. So the programmer needs to find the locator that contains this section. E.g.:
@@ -48,7 +48,6 @@ A Limited section on the screen may be represented by a separate class. This cla
 
 @FindBy (id = '84some_section')
 private SubPage subSection;
-
 
 This class allows the locators to be more simple. 
 For example - a page maintains many buttons. Each button is represented by a class member. The locators for this buttons must distinguish each button from the others and must be very specific. But if one button is located in an section, and this section is represented in the test by a separate SubPage, the locator may be very simple: 
@@ -87,7 +86,6 @@ class MainPage extends LoadablePage {
     private Dialog someDialog; //refers to the Dialog class below
 }
 
-
 class SomeDialog extends DialogImpl { . . . }
 
 
@@ -109,6 +107,7 @@ class SomePage extends LoadablePage {
 }
 
 This helps SimpleSelenium to makes sure that a new page if fully loaded, before proceeding with the test. Only when SimpleSelenium can locate the explicit Element in the DOM the test will continue to the next step.
+
 
 
 6) Specific Elements - classes of specific HTML (and PrimeFaces) GUI element 
