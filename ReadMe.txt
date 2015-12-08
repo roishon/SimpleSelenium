@@ -35,10 +35,7 @@ Some of the important methods of class LoadablePage will be introduced in §8.
 
 
 
-
-
 3) SubPage, SubPageImpl - a class member which represent a section of the page
-
 
 A Limited section on the screen may be represented by a separate class. This class should extend SubPageImpl instead of LoadablePage (SubPage is an interface). The Constructor of this class will receive a Selement as parameter. This Selement represent a GUI-Element, which contains this section on the screen. So the programmer needs to find the locator that contains this section. E.g.:
 
@@ -77,6 +74,7 @@ In General ALWAYS USE INTERFACE AS TYPE FOR TYPE OF CLASS MEMBERS, not classes;
 The class which represents the this section should extends the class SubPageImpl.
 
 
+
 4) Dialog, DialogImpl
 
 Similar to SubPage, a class which represents a Dialog can extends DialogImpl. Using this class helps SimpleSelenium to make sure dialogs are fully opened or closed, before proceeding with the test, which helps avoiding test failing. 
@@ -113,7 +111,6 @@ class SomePage extends LoadablePage {
 This helps SimpleSelenium to makes sure that a new page if fully loaded, before proceeding with the test. Only when SimpleSelenium can locate the explicit Element in the DOM the test will continue to the next step.
 
 
-
 6) Specific Elements - classes of specific HTML (and PrimeFaces) GUI element 
 
 In Selenium all GUI-Elements are covered only by WebElement. SimpleSelenium has various of interface and class to represents simple html elements (input fields, buttons), and Primefaces elements. Those are this interfaces:
@@ -125,7 +122,6 @@ PfTree, PfCalendar, PfSelect (stands for select option, which are not based on t
 Those component where created upon a specific version of Primeface project, and may be deprecated or not working correctly for other projects. The interface above of the HTML group are ever green.
 
 Always use the interface for all class members, never the class.
-
 
 @FindBy(xpath = "//input[@name='q']")
 private TextInput  searchField; <= Use interface TextInput NOT TextInutImpl 
@@ -144,6 +140,9 @@ public class MainPage extends LoadablePage {
 
 	@FindBy(. . .)
 	private ASpecificDialog someDialog;}
+
+
+
 8) Methods of class LoadablePage
 
 
@@ -165,13 +164,11 @@ public class MainPage extends LoadablePage {
 }
 
 
-
 8b) refreshPage() - avoiding all ExpectedCondition
 
 An Exception often thrown when running a test with Selenium is 
 StaleElementReferenceException. This happens after the DOM was dynamically changed and the the test can not use the Objects referenced by the class members to contact the relevant nodes in the current DOM. Calling refreshPage() will dismiss all the reference Object and will allocate all class members of the page class with new Objects. This prevents the test from failing and most important save the programmer a lot of time because THERE IS NO NEED TO WRITE ANY SPECIFIC ExpectedCondition IN THE WHOLE TEST! This saves a great amount of time comparing to a regular test with selenium. 
 For example, changes on the screen and in the DOM are being made after provoked by choose in a drop down menu:
-
 
 class SomePage extends LoadablePage {
 
@@ -187,15 +184,13 @@ class SomePage extends LoadablePage {
  	}
 }
 
-
 refreshPage() should be used:
 – After an action that changes the DOM dynamically
 – When the test fails repeatedly with StaleElementReferenceException. The Method refreshPage() should be called previous to the step where the test fails. 
 
 
-8c) Wrapper methods for methods of WebElement - making sure class members can address the GUI elements. In order to avoid the StaleElementReferenceException (see 8a), LoadablePage has Methods to wrap all the known methods of Selenium's WebElement. Those methods have one more parameter comparing to the original WebElement methods. This parameter is of type Selement. E.g. Methods of WebElement and their equivalent of Selement:
-
-
+8c) Wrapper methods for methods of WebElement - making sure class members can 
+address the GUI elements. In order to avoid the StaleElementReferenceException (see 8a), LoadablePage has Methods to wrap all the known methods of Selenium's WebElement. Those methods have one more parameter comparing to the original WebElement methods. This parameter is of type Selement. E.g. Methods of WebElement and their equivalent of Selement:
 
 WebElement 				Selement 
 click();				click(Selement);
@@ -232,7 +227,6 @@ public class MainPage extends LoadablePage {
 }
 
 
-
 8e) dragAndDrop 
 
 public void dragAndDrop (Selement dragged, Selement target);
@@ -259,14 +253,12 @@ For the rest of the page classes this method should be ignored.
 
 
 
-
 9)  Creating a new type of class representing an Element on the GUI.
 
 In order to form an new class, similar to the specific classes in §6, follow this two steps:
 
 9a) Create an interface
 This interface should extends Selement (or SubPage or Dialog. Depends of the nature of that element). This interface must be annotated with @ImplementingClass, containing the class name that implements this interface. (The most simple consistent solution is to add "Impl' to the name of the interface).
-
 
 @ImplementingClass(NewGuiElementImpl.class)
 public interface NewGuiElement extends Selement {
@@ -283,11 +275,11 @@ The new Element may extends SubPageImpl or DialogImpl instead of SelementImpl ac
 Now the new interface can be used as a type for class members. 
 
 
+
 10) Setting the WebDriver
 
 As in a selenium Test, an instance of WebDriver should be created when the starting running the test.
 In addition to that, in SimpleSelenium the driver must be set to a class named TestSingleton. This is done one time in the beginning of the test instead of passing over a reference of WebDriver between classes many times as normally done in a selenium test:
-
 
 private WebDriver driver;
 
